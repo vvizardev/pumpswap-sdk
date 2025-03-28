@@ -4,11 +4,12 @@ import { clusterApiUrl, Connection, Keypair, PublicKey, TransactionInstruction }
 import { getAssociatedTokenAddressSync, TOKEN_2022_PROGRAM_ID } from "@solana/spl-token";
 import idl from "../src/idl/pump-swap.json";
 import type { PumpSwapIDL } from "../src/idl/pump-swap";
-import { GLOBAL_CONFIG_SEED, LP_MINT_SEED, POOL_SEED, PROTOCOL_FEE_RECIPIENT } from "./constants";
+import { GLOBAL_CONFIG_SEED, LP_MINT_SEED, POOL_SEED, PROTOCOL_FEE_RECIPIENT, PROTOCOL_FEE_RECIPIENT_MAINNET } from "./constants";
 import { CreatePoolType, DepositType, TradeType, WithdrawType } from "./types";
 
 class PumpSwapSDK {
     private program: Program<PumpSwapIDL>;
+    private cluster: "mainnet" | "devnet";
 
     /**
      * 
@@ -19,14 +20,20 @@ class PumpSwapSDK {
     constructor(
         cluster: "mainnet" | "devnet",
         commitment: "processed" | "confirmed" | "finalized",
-        customRPC: string
+        customRPC?: string
     ) {
         const wallet = new NodeWallet(Keypair.generate())
         const url = cluster == "mainnet" ? clusterApiUrl("mainnet-beta") : clusterApiUrl("devnet")
+        this.cluster = cluster
         let connection: Connection;
-        try {
-            connection = new Connection(customRPC, { commitment: commitment })
-        } catch (error) {
+
+        if (customRPC) {
+            try {
+                connection = new Connection(customRPC, { commitment: commitment })
+            } catch (error) {
+                connection = new Connection(url, { commitment: commitment })
+            }
+        } else {
             connection = new Connection(url, { commitment: commitment })
         }
         const provider = new AnchorProvider(connection, wallet, { commitment: commitment });
@@ -83,12 +90,14 @@ class PumpSwapSDK {
         const userBaseTokenAccount = getAssociatedTokenAddressSync(baseMint, user)
         const userQuoteTokenAccount = getAssociatedTokenAddressSync(quoteMint, user)
 
+
+
         const ix = await this.program.methods
             .buy(baseAmountOut, maxQuoteAmountIn)
             .accounts({
                 pool,
                 globalConfig: globalConfig,
-                protocolFeeRecipient: PROTOCOL_FEE_RECIPIENT,
+                protocolFeeRecipient: this.cluster == "mainnet" ? PROTOCOL_FEE_RECIPIENT_MAINNET : PROTOCOL_FEE_RECIPIENT,
                 userBaseTokenAccount,
                 userQuoteTokenAccount,
                 baseTokenProgram,

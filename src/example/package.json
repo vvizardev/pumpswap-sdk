@@ -1,0 +1,16 @@
+{
+  "name": "example-pump-swap-core",
+  "version": "1.0.1",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "https://github.com/vvizardev",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "pump-swap-core-v1": "^1.0.2"
+  }
+}

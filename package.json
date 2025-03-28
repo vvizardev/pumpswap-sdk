@@ -1,13 +1,13 @@
 {
   "name": "pump-swap-core-v1",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "https://github.com/vvizardev",
   "scripts": {
     "dev": "ts-node src/index.ts",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ts-node src/test.ts"
   },
   "keywords": [
     "pumpswap",
@@ -16,11 +16,12 @@
     "module"
   ],
   "license": "ISC",
-  "description": "",
+  "description": "This is core SDK for pumpdotfun offical AMM pool - PumpSwap",
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.1",
     "@solana/spl-token": "^0.4.13",
-    "@solana/web3.js": "^1.98.0"
+    "@solana/web3.js": "^1.98.0",
+    "pump-swap-core-v1": "^1.0.2"
   },
   "devDependencies": {
     "@types/bn.js": "^5.1.6"
