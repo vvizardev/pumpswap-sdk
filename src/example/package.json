@@ -1,6 +1,6 @@
 {
   "name": "example-pump-swap-core",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "main": "index.js",
   "scripts": {
     "dev": "ts-node src/index.ts",
