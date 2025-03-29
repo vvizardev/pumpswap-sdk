@@ -8,4 +8,33 @@ PumpSwap SDK is upgrading now.
 
 `yarn add pump-swap-core-v1`
 
+# How to use
+
+### Buy Instruction
+
+```
+ const buyTx = new Transaction()
+        .add(
+            createAssociatedTokenAccountIdempotentInstruction(payer.publicKey, user_base_token_account, payer.publicKey, base_mint),
+            createAssociatedTokenAccountIdempotentInstruction(payer.publicKey, user_quote_token_account, payer.publicKey, NATIVE_MINT),
+            SystemProgram.transfer({
+                fromPubkey: payer.publicKey,
+                toPubkey: user_quote_token_account,
+                lamports: Number(quote_amt),
+            }),
+            createSyncNativeInstruction(user_quote_token_account)
+        );
+        
+    buyTx.add(
+        await pSwap.getBuyInstruction(base_amt, quote_amt, {
+            pool,
+            baseMint: base_mint,
+            quoteMint: NATIVE_MINT,
+            baseTokenProgram: TOKEN_PROGRAM_ID,
+            quoteTokenProgram: TOKEN_PROGRAM_ID,
+            user: payer.publicKey
+        })
+    )
+```
+
 [Contact](https://github.com/vvizardev) for debug & report
